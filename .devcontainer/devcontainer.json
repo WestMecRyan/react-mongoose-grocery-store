@@ -1,0 +1,26 @@
+{
+  "name": "student-mongoose-project",
+  "image": "mcr.microsoft.com/vscode/devcontainers/base:0-focal",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "humao.rest-client"
+      ]
+    }
+  },
+  "forwardPorts": [3000, 3001],
+  "remoteEnv": {
+    "MONGO_URI": "${{ secrets.MONGO_URI }}",
+    "VITE_API_URL": "${{ secrets.VITE_API_URL }}"
+  },
+  "postCreateCommand": "bash -c 'set -x && (cd server && npm install && echo \"MONGO_URI=$MONGO_URI\" > .env) && (cd client && npm install && echo \"VITE_API_URL=$VITE_API_URL\" > .env)'",
+  "shutdownAction": "none"
+}
