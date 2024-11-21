@@ -24,13 +24,26 @@ function App() {
     }
   };
 
+  const [formErrors, setFormErrors] = useState([]);
+
   const handleAddGrocery = async (data) => {
     try {
       await insertGrocery(database, collection, data);
       fetchGroceries();
       setIsModalOpen(false);
+      setFormErrors([]); // Clear any previous errors
     } catch (error) {
-      console.error("Error adding grocery:", error);
+      if (error.response && error.response.data) {
+        const { errors } = error.response.data;
+        if (errors) {
+          setFormErrors(errors);
+        } else {
+          setFormErrors([error.response.data.error]);
+        }
+      } else {
+        console.error("Error adding grocery:", error);
+        setFormErrors(["An unexpected error occurred. Please try again."]);
+      }
     }
   };
 
@@ -41,7 +54,7 @@ function App() {
       <GroceryList groceries={groceries} />
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          <GroceryForm onSubmit={handleAddGrocery} />
+          <GroceryForm onSubmit={handleAddGrocery} errors={formErrors} />
         </Modal>
       )}
     </div>

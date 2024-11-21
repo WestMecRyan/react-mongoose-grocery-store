@@ -110,7 +110,14 @@ app.post('/insert/:database/:collection', async (req, res) => {
         // Log any errors to the console
         console.error('there was a problem creating new document', err);
         // Send back a 400 status code and the error message in the response
-        res.status(400).json({ error: err.message })
+        if (err.name === 'ValidationError') {
+            // Extract validation errors and send them back
+            const errors = Object.values(err.errors).map((error) => error.message);
+            res.status(400).json({ errors });
+        } else {
+            // Handle other types of errors
+            res.status(400).json({ error: err.message });
+        }
     }
 });
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-function GroceryForm({ onSubmit }) {
+function GroceryForm({ onSubmit, errors }) {
   const [formData, setFormData] = useState({
     item: "",
     food_group: "",
@@ -64,6 +64,15 @@ function GroceryForm({ onSubmit }) {
           onChange={handleChange}
         />
       </label>
+      {errors && errors.length > 0 && (
+        <div className="error-messages">
+          {errors.map((error, index) => (
+            <p key={index} style={{ color: "red" }}>
+              {error}
+            </p>
+          ))}
+        </div>
+      )}
       <button type="submit">Submit</button>
     </form>
   );
